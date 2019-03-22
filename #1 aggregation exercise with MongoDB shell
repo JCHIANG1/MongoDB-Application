@@ -1,0 +1,30 @@
+#load the data
+mongoimport -d udemy_practice -c person --jsonArrat Downloads/persons.jason
+
+#display the dbs to see if the data is loaded correctly
+show dbs
+
+#switch to correct database
+use udemy_practice
+show collections
+
+#take a look of what the data is look like
+db.person.findOne()
+
+#filter the data with only female 
+db.person.aggregate([{$match:{gender:"female"}}]).pretty()
+
+#look at how many female in each state in the dataset
+db.person.aggregate([
+{$match:{gender:"female"}},
+{$group:{_id:{location:"$location.state"},totalPepople:{$sum:1}}}
+]).pretty()
+
+# from the results, the sinop seems to have more female, prove it with the find function
+db.person.find({"location.state":"sinop"}).pretty()
+
+#sort the aggregation result based on the amonunt of people with decending order
+db.person.aggregate([
+{$match:{gender:"female}},
+{$group:{_id:{location:"$location.state"},totalPeople:{$sum:1}}},
+{$sort:{totalPeople:-1}}
