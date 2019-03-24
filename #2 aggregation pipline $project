@@ -28,5 +28,11 @@ db.person.aggregate([
 
 # project the date and convert the string to the date type
 db.person.aggregate([
-{$project:{_id:0,firstName:"$name.first",age:"$dob.age",birthday:{$convert:{input:"$dob.date",to:"date"}}}
-}])
+{$project:{_id:0,firstName:"$name.first",age:"$dob.age",birthday:{$convert:{input:"$dob.date",to:"date"}}}}
+])
+
+# use the shortcut operator for the date transformation
+# since I didn't specify the onError and the onNull we can use the shortcut operation $toDate to be more efficient
+db.person.aggregate([
+{$project:{_id:0,firstName:"$name.first",age:"$dob.age",birthday:{$toDate:"$dob.date"}}}
+])
