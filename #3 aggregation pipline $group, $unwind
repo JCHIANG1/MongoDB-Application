@@ -26,7 +26,27 @@ db.friends.aggregate([
 
 # with the exmple above, we can find that some values in the allHobbies array are duplicate
 # we can use the $addToSet operator to solve this problem
+
 db.friends.aggregate([
 {$unwind:"$hobbies"},
 {$group:{_id:{age:"$age"},allHobbies:{$addToSet:"$hobbies"}}}
+])
+
+#output the first value of the array using the $slice operator 
+# 1 means how many item to output started from the beginning
+
+db.friends.aggregate([
+{$project:{_id:0,score:{$slice:["$examScore",1]}}}
+])
+
+#output the last two value of the array using the $slice operator 
+
+db.friends.aggregate([
+{$project:{_id:0,score:{$slice:["$examScore",-2]}}}
+])
+
+#output the array using the $slice operator, start from position 2 and output one element 
+
+db.friends.aggregate([
+{$project:{_id:0,score:{$slice:["$examScore",2,1]}}}
 ])
