@@ -1,2 +1,2 @@
-### MongoDB-with shell exercise
+### MongoDB with shell exercise
 
