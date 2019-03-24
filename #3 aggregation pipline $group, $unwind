@@ -50,3 +50,11 @@ db.friends.aggregate([
 db.friends.aggregate([
 {$project:{_id:0,score:{$slice:["$examScore",2,1]}}}
 ])
+
+#get the length of the array with the $size operator
+#find out how mwny exam each person took
+
+db.friends.aggregate([ 
+{$project:{_id:0,name:1,numExams:{$size:"$examScores"}}} 
+])
+
