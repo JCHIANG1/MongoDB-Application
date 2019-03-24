@@ -1,2 +1,2 @@
-### MongoDB-exercise
-Aggregation framework 
+### MongoDB-with shell exercise
+
