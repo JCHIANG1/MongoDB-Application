@@ -1,0 +1,45 @@
+# transform the exam scores as an array only holder doc higher than 60
+# we can do this with the $filter operator
+# note: as in the $filter operator refers to a temporary variable to hold the documents in the array
+
+ db.friends.aggregate([
+   {$project:{_id:0,
+              scores:{$filter:{input:"$examScores",as:"sc_doc_hold",cond:{$gt:["sc_doc_hold",60]}}}
+              }}])
+              
+
+# only output the highest exam score for every person
+db.friends.aggregate([
+... {$unwind:"$examScores"},
+... {$group:{_id:"$name",highestScore:{$max:"$examScores.score"}}}])
+
+# finding the distribution / summary statistics
+# specify the bucket number and mongoDB define the boundaries for you
+ db.person.aggregate([
+... {$bucketAuto:{
+... groupBy:"$dob.age",
+... buckets:3,
+... output:{totalPpl:{$sum:1},avgAge:{$avg:"$dob.age"}}}
+... }])
+
+# specify the boundaries myself
+db.person.aggregate([
+... {$bucket:{groupBy:"$dob.age",boundaries:[0,10,20,30,40,50,60],
+... output:{avgAge:{$avg:"$dob.age"}}}}])
+
+# the command above ran into error
+# the reson for that is because there are age values greater than 60
+
+db.person.find({"dob.age":{$gt:70}}).count()
+
+# we can learn that the maximum age value is 74
+
+db.person.find().sort({"dob.age":-1}).pretty().limit(1)
+
+#therefore, we can modify the commend and this should work
+
+db.person.aggregate([ 
+                     {$bucket:{groupBy:"$dob.age", 
+                     boundaries:[0,10,20,30,40,50,60,70,80], 
+                     output:{avgAge:{$avg:"$dob.age"},sumPpl:{$sum:1}}}}
+                     ])
