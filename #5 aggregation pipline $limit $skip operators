@@ -1,0 +1,16 @@
+# find the oldest person in the dataset
+ db.person.aggregate([ 
+                     {$project:{_id:0,name:1,birthdate:{$toDate:"$dob.date"}}}, 
+                     {$sort:{birthdate:1}},
+                     {$limit:1} 
+                     ]).pretty()
+                     
+# find the next 10 oldest people in the dataset and format the output with the full name
+ db.person.aggregate([ 
+                     {$project:{_id:0, name:{concat:["$name.first", " ", "$name.last"]},birthdate:{$toDate:"$dob.date"}}}, 
+                     {$sort:{birthdate:1}},
+                     {$skip:1},
+                     {$limit:10}
+                     ])
+ 
+ 
